@@ -13,7 +13,7 @@ public class AuthManager implements AuthService {
 
 	private UserService userService;
 	private EmailService emailService;
-	private User user;
+	private User user = new User();
 	private List<Boolean> rules= new ArrayList<Boolean>();
 	public AuthManager(UserService userService, EmailService emailService) {
 		super();
