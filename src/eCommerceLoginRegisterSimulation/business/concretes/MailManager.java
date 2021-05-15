@@ -9,4 +9,10 @@ public class MailManager implements EmailService{
 		System.out.println(message+" : adresine doðrulama epostasý gönderildi.");		
 	}
 
+	@Override
+	public void verify(String message) {
+		System.out.println(message+" : mail adresiniz doðrulandý");
+		
+	}
+
 }

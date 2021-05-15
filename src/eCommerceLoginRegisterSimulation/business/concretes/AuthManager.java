@@ -12,13 +12,12 @@ import eCommerceLoginRegisterSimulation.entities.concretes.User;
 public class AuthManager implements AuthService {
 
 	private UserService userService;
-	private EmailService emailService;
 	private User user = new User();
 	private List<Boolean> rules= new ArrayList<Boolean>();
-	public AuthManager(UserService userService, EmailService emailService) {
+	public AuthManager(UserService userService) {
 		super();
 		this.userService = userService;
-		this.emailService=emailService;
+		
 	}
 	@Override
 	public void login(String email, String password) {		
@@ -31,8 +30,7 @@ public class AuthManager implements AuthService {
 				System.out.println("Giriþ iþlemi baþarýsýz olmuþtur.");
 				return;
 			}
-		}
-		
+		}		
 		System.out.println("Giriþ iþlemi baþarýlýdýr.");
 	}
 	@Override
@@ -41,11 +39,14 @@ public class AuthManager implements AuthService {
 		user.setLastName(lastName);
 		user.setEmail(email);
 		user.setPassword(password);
+		for (Boolean rule : rules) {
+			if(rule==false) {
+				System.out.println("Kayýt iþlemi baþarýsýz olmuþtur.");
+				return;
+			}
+		}	
 		
-		emailService.send(user.getEmail());
-		System.out.println("Email doðrulandý");
 		userService.add(user);
-		
 		
 		
 	}

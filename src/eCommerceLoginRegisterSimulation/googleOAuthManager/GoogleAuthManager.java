@@ -8,7 +8,7 @@ public class GoogleAuthManager {
 		System.out.println("Google ile giriþ baþarýlý bir þekilde yapýlmýþtýr. :"+email+" "+password);
 	}
 	public void register(String firstName, String lastName, String email,String password) {
-		System.out.println("Google hesabý ile kayýt oldunuz."+"Ýsim "+firstName+" Soyisim "+lastName+" Email"+email+" "+password);
+		System.out.println("Google hesabý ile kayýt oldunuz. "+"Ýsim :"+firstName+" Soyisim : "+lastName+" Email: "+email);
 	}
 	private boolean checkPasswordIsNull(String password) {
 		if(password.isEmpty() || password ==null) {

@@ -6,17 +6,20 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import eCommerceLoginRegisterSimulation.business.abstracts.UserService;
+import eCommerceLoginRegisterSimulation.core.EmailService;
 import eCommerceLoginRegisterSimulation.dataAccess.abstracts.UserDao;
 import eCommerceLoginRegisterSimulation.entities.concretes.User;
 
 public class UserManager implements UserService{
 
 	private UserDao userDao;
+	private EmailService emailService;
 	private List<Boolean> rules= new ArrayList<Boolean>();
 	private List<User> users;
-	public UserManager(UserDao userDao) {
+	public UserManager(UserDao userDao,EmailService emailService) {
 		super();
 		this.userDao = userDao;
+		this.emailService=emailService;
 	}
 
 	@Override
@@ -28,12 +31,16 @@ public class UserManager implements UserService{
 		rules.add(checkEmailIsRegexFormat(user));
 		for (Boolean rule : rules) {
 			if(rule==false) {
+				System.out.println("Validasyon kurallarýndan geçemedi");
 				return;
 			}
 		}
 		this.userDao.add(user);
 		this.users.add(user);
+		this.emailService.send(user.getEmail());
+		this.emailService.verify(user.getEmail()+ " Kaydýnýz baþarýyla tamamlanmýtýr.");
 		
+				
 	}
 
 	@Override
@@ -65,7 +72,7 @@ public class UserManager implements UserService{
 	private boolean checkEmailExists(User user) {
 		users=userDao.getAll();
 		for(User userMail:users) {
-			if(userMail.getEmail().contentEquals(user.getEmail())) {
+			if(userMail.getEmail().equals(user.getEmail())) {
 				System.err.println("Kayýtlý email");
 				return false;				
 			}
@@ -73,12 +80,14 @@ public class UserManager implements UserService{
 		return true;
 	}
 	private boolean checkEmailIsRegexFormat(User user) {
-		String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
-		if(user.getEmail().matches(regex)) {
-			return true;
-		}
-		System.out.println("Lütfen emailinizi doðru formatta giriniz. :"+user.getEmail());
-		return false;
+		String regex = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
+		Pattern pattern=Pattern.compile(regex);
+		Matcher matcher=pattern.matcher(user.getEmail());
+		if(matcher.matches()==false) {
+			System.err.println("Email formatý dogru deðil. :"+user.getEmail());
+			return false;
+		}	
+		return true;
 	}
 	
 	
